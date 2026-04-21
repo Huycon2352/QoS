@@ -1,5 +1,6 @@
 # QoS
-
+# Requirement :
+- Install Mininet,Pyhton3,Ryu,OVS
 # How to deploy
 
 + Git clone : git clone https://github.com/Huycon2352/QoS
