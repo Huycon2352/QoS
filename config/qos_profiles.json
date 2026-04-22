@@ -1,0 +1,23 @@
+
+{
+  "profiles": {
+    "1": {
+      "label": "High (A)",
+      "max_bw": "100M"
+    },
+    "2": {
+      "label": "Good (B)",
+      "max_bw": "60M"
+    },
+    "3": {
+      "label": "Stable (C)",
+      "max_bw": "20M"
+    },
+    "4": {
+      "label": "Medium (D)",
+      "max_bw": "5M"
+    }
+  }
+}
+
+
