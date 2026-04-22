@@ -29,7 +29,7 @@ Kiểm tra kết nối cơ bản giữa các host:
   - mininet> h1 ping h2
 
 
-# 2. Sử dụng Iperf3 (Khuyên dùng)
+# 2. Sử dụng Iperf3 
 
 Sử dụng xterm để dễ tương tác 
   - mininet> xterm h1 h2
