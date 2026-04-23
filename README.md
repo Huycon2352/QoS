@@ -123,3 +123,4 @@ Expected baseline:
 Common broken state to watch for:
 
 - only table 0 `goto_table:1` exists while table 1 is empty → packets never reach PacketIn handler for learning/flooding
+- fix by checking controller startup logs and reloading switch features so table 1 table-miss is installed by `switch_features_handler`

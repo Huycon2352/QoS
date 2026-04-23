@@ -103,7 +103,7 @@ class DynamicAccessController(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         dpid = datapath.id
         in_port = msg.match["in_port"]
-        table_id = getattr(msg, "table_id", -1)
+        table_id = getattr(msg, "table_id", None)
         if dpid not in self._packet_in_seen_dpids:
             self._packet_in_seen_dpids.add(dpid)
             self.logger.info("[PACKET_IN] handler active for dpid=%s", dpid)
@@ -118,6 +118,7 @@ class DynamicAccessController(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth_list = pkt.get_protocols(ethernet.ethernet)
         if not eth_list:
+            # Learning switch logic only handles Ethernet frames.
             return
         eth = eth_list[0]
         eth_type = eth.ethertype
@@ -234,9 +235,18 @@ class DynamicAccessController(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         inst = list(instructions) if instructions is not None else []
         if actions:
-            inst.insert(
-                0, parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)
+            apply_actions = parser.OFPInstructionActions(
+                ofproto.OFPIT_APPLY_ACTIONS, actions
             )
+            goto_index = next(
+                (
+                    idx
+                    for idx, instruction in enumerate(inst)
+                    if getattr(instruction, "type", None) == ofproto.OFPIT_GOTO_TABLE
+                ),
+                len(inst),
+            )
+            inst.insert(goto_index, apply_actions)
 
         if buffer_id is not None:
             mod = parser.OFPFlowMod(
