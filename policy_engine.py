@@ -1,122 +1,114 @@
 # policy_engine.py
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 import time
 
-WINDOW_SECONDS = 120
 
-ROLE_DEFAULT_QUEUE = {
-    "admin": 0,
-    "employee": 1,
-    "guest": 2,
-    "server": 1,
-}
-
-QUEUE_NAME = {
-    0: "q0",
-    1: "q1",
-    2: "q2",
-    3: "q3",
-}
+@dataclass(frozen=True)
+class RolePolicy:
+    least_queue_id: int
+    max_queue_id: int
 
 
 @dataclass
-class HostTrafficWindow:
-    ip: str = ""
-    mac: str = ""
-    role: str = "unknown"
-    current_queue: int = 1
-    default_queue: int = 1
-
+class HostState:
+    key: str
+    role: str
+    ip: Optional[str] = None
+    mac: Optional[str] = None
+    in_port: Optional[int] = None
     packet_count: int = 0
-    last_packet_count: int = 0
+    current_queue: int = 0
 
-    window_start_ts: float = field(default_factory=time.time)
-    variation_score: float = 0.0
-    stable_cycles: int = 0
-    penalty_cycles: int = 0
-    history: list = field(default_factory=list)
+
+@dataclass
+class CongestionConfig:
+    window_seconds: int
+    threshold_packets_per_window: int
 
 
 class PolicyEngine:
-    def __init__(self):
-        self.hosts: Dict[str, HostTrafficWindow] = {}
+    def __init__(
+        self,
+        role_policies: Dict[str, RolePolicy],
+        congestion: CongestionConfig,
+        fallback_role: str = "guest",
+    ):
+        self.hosts: Dict[str, HostState] = {}
+        self.role_policies = role_policies
+        self.congestion = congestion
+        self.fallback_role = fallback_role
+        if self.fallback_role not in self.role_policies:
+            raise ValueError("fallback_role must exist in role_policies")
+        self.window_start = time.time()
+        self.window_total_packets = 0
+        self.congested = False
+        self.last_window_total_packets = 0
 
-    def register_host(self, ip: str, mac: str, role: str):
-        if ip not in self.hosts:
-            default_queue = ROLE_DEFAULT_QUEUE.get(role, 1)
-            self.hosts[ip] = HostTrafficWindow(
+    def _role_policy(self, role: str) -> RolePolicy:
+        return self.role_policies.get(role, self.role_policies[self.fallback_role])
+
+    def decide_queue_for_role(self, role: str) -> int:
+        policy = self._role_policy(role)
+        return policy.least_queue_id if self.congested else policy.max_queue_id
+
+    def register_or_update_host(
+        self,
+        host_key: str,
+        role: str,
+        ip: Optional[str] = None,
+        mac: Optional[str] = None,
+        in_port: Optional[int] = None,
+    ) -> HostState:
+        if host_key not in self.hosts:
+            queue_id = self.decide_queue_for_role(role)
+            self.hosts[host_key] = HostState(
+                key=host_key,
+                role=role,
                 ip=ip,
                 mac=mac,
-                role=role,
-                current_queue=default_queue,
-                default_queue=default_queue,
+                in_port=in_port,
+                current_queue=queue_id,
             )
-        else:
-            self.hosts[ip].mac = mac
-            self.hosts[ip].role = role
-
-    def get_host(self, ip: str) -> Optional[HostTrafficWindow]:
-        return self.hosts.get(ip)
-
-    def increment_packet(self, ip: str, count: int = 1):
-        host = self.hosts.get(ip)
-        if host:
-            host.packet_count += count
-
-    def compute_variation(self, host: HostTrafficWindow) -> float:
-        prev = max(host.last_packet_count, 1)
-        curr = host.packet_count
-        return abs(curr - prev) / prev
-
-    def decide_queue(self, host: HostTrafficWindow) -> int:
-        variation = self.compute_variation(host)
-        host.variation_score = variation
-
-        HIGH_VARIATION_THRESHOLD = 0.80
-        LOW_VARIATION_THRESHOLD = 0.35
-
-        stable = variation < LOW_VARIATION_THRESHOLD
-
-        if variation >= HIGH_VARIATION_THRESHOLD or host.packet_count > 3000:
-            host.penalty_cycles = 2
-            host.stable_cycles = 0
-            return 3
-
-        if host.penalty_cycles > 0:
-            host.penalty_cycles -= 1
-            return 3
-
-        if stable:
-            host.stable_cycles += 1
-        else:
-            host.stable_cycles = 0
-
-        if host.stable_cycles >= 2:
-            return host.default_queue
-
-        return host.default_queue
-
-    def commit_window(self, ip: str):
-        host = self.hosts.get(ip)
-        if not host:
-            return None
-
-        host.last_packet_count = host.packet_count
-        host.packet_count = 0
-        host.window_start_ts = time.time()
-        host.history.append({
-            "ts": time.time(),
-            "ip": host.ip,
-            "mac": host.mac,
-            "role": host.role,
-            "packet": host.last_packet_count,
-            "queue": host.current_queue,
-            "variation": host.variation_score,
-            "stable_cycles": host.stable_cycles,
-            "penalty_cycles": host.penalty_cycles,
-        })
+        host = self.hosts[host_key]
+        host.role = role
+        host.ip = ip or host.ip
+        host.mac = mac or host.mac
+        host.in_port = in_port if in_port is not None else host.in_port
         return host
 
-    def get_queue_name(self, queue_id: int) -> str:
-        return QUEUE_NAME.get(queue_id, f"q{queue_id}")
+    def get_host(self, host_key: str) -> Optional[HostState]:
+        return self.hosts.get(host_key)
+
+    def note_packet(self, host_key: str, count: int = 1) -> None:
+        host = self.hosts.get(host_key)
+        if not host:
+            return
+        host.packet_count += count
+        self.window_total_packets += count
+
+    def window_elapsed(self) -> bool:
+        return (time.time() - self.window_start) >= self.congestion.window_seconds
+
+    def evaluate_and_rotate_window(self) -> Dict[str, int]:
+        """Rotate traffic window and return host_key->queue_id for queue changes."""
+        self.last_window_total_packets = self.window_total_packets
+        next_congested = (
+            self.window_total_packets >= self.congestion.threshold_packets_per_window
+        )
+        self.congested = next_congested
+
+        changed_hosts: Dict[str, int] = {}
+        for host in self.hosts.values():
+            desired = self.decide_queue_for_role(host.role)
+            if host.current_queue != desired:
+                host.current_queue = desired
+                changed_hosts[host.key] = desired
+            host.packet_count = 0
+
+        self.window_start = time.time()
+        self.window_total_packets = 0
+        return changed_hosts
+
+    def all_hosts(self) -> List[HostState]:
+        return list(self.hosts.values())

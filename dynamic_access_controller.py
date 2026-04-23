@@ -3,13 +3,14 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER, set_ev_cls
 from ryu.lib import hub
+from ryu.ofproto import ether
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ipv4, arp
 
 import logging
-import time
 
-from policy_engine import PolicyEngine, WINDOW_SECONDS
+from policy_engine import PolicyEngine
+from rbac_qos_config import RbacQosConfig, default_config_path, normalize_mac
 
 
 class DynamicAccessController(app_manager.RyuApp):
@@ -22,44 +23,35 @@ class DynamicAccessController(app_manager.RyuApp):
 
         self.mac_to_port = {}
         self.datapaths = {}
-        self.policy = PolicyEngine()
-
-        self.role_by_ip = {
-            "10.0.0.1": "guest",     # h1
-            "10.0.0.2": "admin",     # h2
-            "10.0.0.3": "employee",  # h3
-            "10.0.0.4": "server",    # h4
-        }
+        self.config = RbacQosConfig.from_file(default_config_path())
+        self.policy = PolicyEngine(
+            role_policies=self.config.role_policies,
+            congestion=self.config.congestion,
+            fallback_role=self.config.fallback_role,
+        )
 
         self.monitor_thread = hub.spawn(self._monitor_loop)
 
-        self.logger.info("DynamicAccessController initialized")
+        self.logger.info(
+            "DynamicAccessController initialized, queues=%s, roles=%s",
+            self.config.queue_ids,
+            list(self.config.role_policies.keys()),
+        )
 
     def _monitor_loop(self):
         while True:
             try:
-                for ip, host in list(self.policy.hosts.items()):
-                    elapsed = time.time() - host.window_start_ts
-                    if elapsed >= WINDOW_SECONDS:
-                        new_queue = self.policy.decide_queue(host)
-                        old_queue = host.current_queue
-
-                        host.current_queue = new_queue
-
-                        self.logger.info(
-                            "[WINDOW] ip=%s mac=%s role=%s packet:%s var=%.3f stable=%s q%s->q%s",
-                            ip,
-                            host.mac,
-                            host.role,
-                            host.last_packet_count,
-                            host.variation_score,
-                            host.stable_cycles,
-                            old_queue,
-                            new_queue,
-                        )
-
-                        self.policy.commit_window(ip)
-                        self._apply_host_policy(ip, host.current_queue)
+                if self.policy.window_elapsed():
+                    changed = self.policy.evaluate_and_rotate_window()
+                    state = "congested" if self.policy.congested else "normal"
+                    self.logger.info(
+                        "[WINDOW] state=%s total_packets=%s changed_hosts=%s",
+                        state,
+                        self.policy.last_window_total_packets,
+                        len(changed),
+                    )
+                    for host_key, queue_id in changed.items():
+                        self._apply_host_policy(host_key, queue_id)
             except Exception as e:
                 self.logger.exception("monitor loop error: %s", e)
 
@@ -103,6 +95,7 @@ class DynamicAccessController(app_manager.RyuApp):
         ip_dst = None
 
         ip_pkt = pkt.get_protocol(ipv4.ipv4)
+        is_ipv4 = ip_pkt is not None
         if ip_pkt:
             ip_src = ip_pkt.src
             ip_dst = ip_pkt.dst
@@ -115,34 +108,32 @@ class DynamicAccessController(app_manager.RyuApp):
         self.mac_to_port.setdefault(dpid, {})
         self.mac_to_port[dpid][src] = in_port
 
-        if ip_src and ip_src in self.role_by_ip:
-            role = self.role_by_ip[ip_src]
-            self.policy.register_host(ip_src, src, role)
-            self.policy.increment_packet(ip_src, 1)
-
-            host = self.policy.get_host(ip_src)
+        role = self.config.identity.resolve_role(ip_src, src, in_port)
+        if role:
+            src_host_key = self._host_key(ip_src, src)
+            host = self.policy.register_or_update_host(
+                src_host_key,
+                role,
+                ip=ip_src,
+                mac=src,
+                in_port=in_port,
+            )
+            self.policy.note_packet(src_host_key, 1)
             self.logger.info(
-    		"[PKT] ip=%s mac=%s role=%s packet:%s Q_ID=%s",
-    		ip_src,
-    		src,
-   		role,
-    		host.packet_count if host else 0,
-   		host.current_queue if host else "n/a",
-		)
+                "[PKT] key=%s ip=%s mac=%s role=%s packets=%s queue=%s state=%s",
+                src_host_key,
+                ip_src,
+                src,
+                role,
+                host.packet_count,
+                host.current_queue,
+                "congested" if self.policy.congested else "normal",
+            )
 
-            if host:
-                desired_queue = self.policy.decide_queue(host)
-                if desired_queue != host.current_queue:
-                    old_q = host.current_queue
-                    host.current_queue = desired_queue
-                    self.logger.info(
-                        "[QUEUE] ip=%s role=%s q%s->q%s",
-                        ip_src,
-                        role,
-                        old_q,
-                        desired_queue,
-                    )
-                    self._apply_host_policy(ip_src, desired_queue)
+            desired_queue = self.policy.decide_queue_for_role(role)
+            if desired_queue != host.current_queue:
+                host.current_queue = desired_queue
+                self._apply_host_policy(src_host_key, desired_queue)
 
         out_port = ofproto.OFPP_FLOOD
         if dst in self.mac_to_port[dpid]:
@@ -150,9 +141,8 @@ class DynamicAccessController(app_manager.RyuApp):
 
         actions = []
 
-        # chỉ set queue cho flow của chính host đó
-        if ip_src and ip_src in self.policy.hosts:
-            host = self.policy.get_host(ip_src)
+        if role:
+            host = self.policy.get_host(src_host_key)
             if host:
                 actions.append(parser.OFPActionSetQueue(host.current_queue))
 
@@ -160,13 +150,22 @@ class DynamicAccessController(app_manager.RyuApp):
 
         if out_port != ofproto.OFPP_FLOOD:
             match_fields = {"in_port": in_port, "eth_src": src, "eth_dst": dst}
-            if ip_src:
-                match_fields["ipv4_src"] = ip_src
-            if ip_dst:
-                match_fields["ipv4_dst"] = ip_dst
+            if is_ipv4:
+                match_fields["eth_type"] = ether.ETH_TYPE_IP
+                if ip_src:
+                    match_fields["ipv4_src"] = ip_src
+                if ip_dst:
+                    match_fields["ipv4_dst"] = ip_dst
 
             match = parser.OFPMatch(**match_fields)
-            self.add_flow(datapath, 1, match, actions)
+            self.add_flow(
+                datapath,
+                self.config.flow.priority,
+                match,
+                actions,
+                idle_timeout=self.config.flow.idle_timeout,
+                hard_timeout=self.config.flow.hard_timeout,
+            )
 
         data = None
         if msg.buffer_id == ofproto.OFP_NO_BUFFER:
@@ -181,7 +180,16 @@ class DynamicAccessController(app_manager.RyuApp):
         )
         datapath.send_msg(out)
 
-    def add_flow(self, datapath, priority, match, actions, buffer_id=None):
+    def add_flow(
+        self,
+        datapath,
+        priority,
+        match,
+        actions,
+        buffer_id=None,
+        idle_timeout=0,
+        hard_timeout=0,
+    ):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
@@ -193,6 +201,8 @@ class DynamicAccessController(app_manager.RyuApp):
                 priority=priority,
                 match=match,
                 instructions=inst,
+                idle_timeout=idle_timeout,
+                hard_timeout=hard_timeout,
             )
         else:
             mod = parser.OFPFlowMod(
@@ -200,17 +210,48 @@ class DynamicAccessController(app_manager.RyuApp):
                 priority=priority,
                 match=match,
                 instructions=inst,
+                idle_timeout=idle_timeout,
+                hard_timeout=hard_timeout,
             )
         datapath.send_msg(mod)
 
-    def _apply_host_policy(self, ip, queue_id):
-        host = self.policy.get_host(ip)
+    def _host_key(self, ip_src, mac_src):
+        """Use IP as host key when available, otherwise normalized string MAC."""
+        if ip_src:
+            return ip_src
+        return normalize_mac(mac_src) or "unknown-host"
+
+    def _delete_host_flows(self, datapath, host):
+        parser = datapath.ofproto_parser
+        ofproto = datapath.ofproto
+        if host.ip:
+            match = parser.OFPMatch(eth_type=ether.ETH_TYPE_IP, ipv4_src=host.ip)
+        elif host.mac:
+            match = parser.OFPMatch(eth_src=host.mac)
+        else:
+            return
+        mod = parser.OFPFlowMod(
+            datapath=datapath,
+            command=ofproto.OFPFC_DELETE,
+            out_port=ofproto.OFPP_ANY,
+            out_group=ofproto.OFPG_ANY,
+            match=match,
+            priority=self.config.flow.priority,
+        )
+        datapath.send_msg(mod)
+
+    def _apply_host_policy(self, host_key, queue_id):
+        host = self.policy.get_host(host_key)
         if not host:
             return
         self.logger.info(
-            "[POLICY] ip=%s mac=%s role=%s queue=q%s",
-            host.ip,
+            "[POLICY] key=%s ip=%s mac=%s role=%s queue=q%s state=%s",
+            host.key,
+            host.ip or "n/a",
             host.mac,
             host.role,
             queue_id,
+            "congested" if self.policy.congested else "normal",
         )
+        for datapath in self.datapaths.values():
+            self._delete_host_flows(datapath, host)

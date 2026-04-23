@@ -8,7 +8,11 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 echo "[INFO] Starting Ryu controller..."
-ryu-manager dynamic_access_controller.py &
+ryu-manager \
+  ryu.app.rest_qos \
+  ryu.app.rest_conf_switch \
+  ryu.app.rest_topology \
+  dynamic_access_controller.py &
 RYU_PID=$!
 
 sleep 2
