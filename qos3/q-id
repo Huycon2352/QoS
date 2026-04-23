@@ -1,0 +1,729 @@
+_uuid               : 178e4f00-9fdb-40a0-be72-075023610342
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 4e64f081-d124-4ffd-aea7-0bc16ab775d2
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : dad96602-ccd2-4720-ac0f-6f8944a25067
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 92636282-cdb5-462a-ac1b-e9feea4e6e51
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 2d1fe003-bfb8-46d7-81e4-8d87b0dfc0f0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : ebbb6c03-9e38-451a-87c7-d0d775718c97
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 1e3a4704-24d2-4612-8a4e-73e31b955b8f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 2948ad84-ce9e-4f55-b409-877fbbb3e477
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 21c93c85-7c66-48b8-bf62-b5b3d97021fd
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 5d1a8985-2897-4b22-8b0a-2fb2cf5c9169
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 92014e06-54c7-4f9d-b8d6-bc2e9965e302
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 0fcc0887-1e3a-4f79-abd5-16963092ac88
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 96b76287-3c18-4a08-8625-651ffee8d464
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : 06de4e07-2dec-4d98-9e60-d5edbd2df54c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 1dfe9d08-0aa0-42e1-af43-b8c9e95e363b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : 960b2e88-efdb-4059-a02b-a2d4de3e9ed5
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : db231f88-5a92-4639-b3bb-19b08cdd14de
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 272f8a89-d1f4-41b9-a23c-c652a8b0d741
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 5ffffa8c-15ea-4dd5-a5a8-2cfde462c5e6
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : f5f5e58d-6adf-419f-8b19-5fb475556419
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 181ab10d-5bdb-48a8-bb92-1b7200403b69
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : a35aec0e-a49b-461a-90de-3e08fc1c7938
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 0aaf868f-6be7-4559-a025-9eec29bc60a7
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : f9d4778f-3c2f-4b25-afb8-f670f8a4b3d1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : ebcf6c10-86de-4631-a4ed-9287ccf7ac30
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : cfacf010-1662-488d-bb6b-1f1e1a90cedb
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : 79bc8a91-729e-454b-9fe0-a91ccb6746f1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : fdc95311-54e9-49fc-ba2f-efa0241f39dd
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 00b5f292-83c6-4f54-aac2-0ca1c2b8ae40
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : 18424c93-de98-4db5-bac0-c7419e64de54
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 13e23413-5fa4-4b89-a786-0976d2be98ba
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : dc43af93-7c68-4b33-8e8b-04aad4332477
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 454cc295-a4e2-4e7c-bcc4-d26e5f24ade0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 97812e15-4430-488a-bab0-afeaaeb8b0fe
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 87b01795-629a-4e48-ab7e-7b4d22cf4ab9
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : bf60f515-5f9a-4edf-a534-232fd91a9d67
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 0e606b16-4500-40d2-ac23-688b3e3276cd
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 4b3a6297-ea7a-43e8-b7f7-b1fa6c1303ad
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : 34c80698-7c7c-406e-8916-8c33719d4d7f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : a2e2b419-d6e7-4988-8545-ad3f96b3dec0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 867b369a-e3b0-4b5e-83b6-5234f9e1debd
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 797d791b-eed5-48be-8d11-1ecfbfd44697
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : ddbbe01e-78fd-46b2-a3c8-08f1888938f1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 332f6b20-57d0-4a1b-a060-aab8b282c4e5
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 730a0e21-bb11-4821-bb85-d08b42ea9af7
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : 2f8bc1a1-5b26-429d-8928-1edd8d18ec8b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : f80f0fa1-1ebd-40ba-b2a0-b5ed3e22f6b0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : adae4c22-35d4-41a2-8108-64afb7d7bcfe
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : 13d49d22-7c34-4cce-8f39-ed2db92e259d
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : 264e0da2-912a-44f7-a53f-9b778df8e1d6
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 7951db23-b8b0-43ce-a99e-179b305d35ef
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 25c64d26-fb03-4bb1-ba11-566e0c9827eb
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 37ed66a8-6f9c-40ce-a6d8-1d9a51164b0e
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : 5cf5ce28-5b9f-45dd-8952-88d3b9b6b31a
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 5b0964a9-7f26-481b-8f3d-c8cf6427a4d2
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 1ea7ac29-4ebc-49d2-bbfb-5a9435f7aa6c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : eec20aac-2e2b-48ec-beb9-e69c3379374c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 52940aad-015e-40de-93c0-de73a9412534
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 3ebbba2e-101f-4107-8714-257c76194c98
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 7e5808ae-6e61-4cfc-88ff-725a8d2e1591
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : c237dcaf-255a-4935-b9e5-08a155a61d54
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 27feccb1-70b5-491b-8531-e4a492ca96d0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 73465332-002d-4295-8146-34751aa6db69
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : aeb011b2-b284-4055-b4b6-6903e6e4ead8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : fc357ab4-0e31-4d48-8503-650da8d1fbb1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000"}
+
+_uuid               : 9a1a4fb4-b5bb-46c1-950d-663b7fede57f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 9a3613b5-4dda-43d1-95dc-abf6fca058bd
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : d3b4d135-df44-4dde-b2aa-9386a15729c4
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : b17fff35-494c-46aa-b4a7-210cdd031baa
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : bd4d4636-9503-4074-b3c9-e1d69dbfdee1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000", min-rate="20000000"}
+
+_uuid               : bfa322b6-8d37-49e5-9e2a-264c4ca8c035
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 11fd8137-67b7-45e7-a0bb-02cf988a073c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : cc26eeba-a843-4395-921f-fb6197cd3dbc
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : a68c843b-962b-4bc3-bf64-7967e658183b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 45f4bcbc-c1b4-4366-96b0-66c30c7b3bbb
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 70cfa03c-5900-401a-b4b6-4bccffae7d83
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 5d51113d-fe6d-4398-9b2e-1e53f09d8ca8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 2eb290bf-30df-4625-940c-f4276d261514
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 3930eec2-2a99-42ea-9037-b26331e0b4a6
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : c95d0242-561a-43b6-9922-422fa71cc292
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : ee7bbb43-d739-4f1f-af9c-485b41f68eb9
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 6e96bd43-02eb-483d-a5d4-d98d6d54b295
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 3a7a0044-344a-4c5d-b469-a2a64a3f9281
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : d6981344-0470-439a-8fb5-dd86ae9fd8a6
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 5a6977c5-17c0-47b4-acfd-12dac6f6b98a
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000", min-rate="1000000"}
+
+_uuid               : e665d845-7ed5-4374-878a-4d861e3e087e
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : 14a56a47-96aa-43a5-bb83-16db9927ee2c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : 9b5e2349-ef78-44c3-aac9-10f5c8e73591
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : cfdd784c-749b-4893-a7d7-7651ef9469a8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 34285ece-4765-4368-b777-4be52793ff3f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 200b8ccf-aaca-42ec-b9d3-fbabad69d0ec
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 60abfbd2-dea3-4a50-a032-17ee052eaead
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 5a6160d2-48cf-4fe3-9efc-c071d60400a8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 23a28a54-0dbd-48d2-b21b-a5be4223d1e0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 91e705d5-2c17-4207-929c-483dc9c775cc
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 0ab2b7d5-014d-4ecd-be87-676fd44e6d93
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 2363c355-d621-474b-8804-abcf347335b1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 6b3a9a58-a6e2-433c-8c0e-ecb5a17b9062
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 406bab59-259b-4728-bbea-0612af872c81
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000", min-rate="5000000"}
+
+_uuid               : ee83ebdb-a490-4967-a5e5-4afa26e909ce
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : 18a37edb-6154-4a2c-979b-0878512a49cc
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : d2396e5c-c5f1-4afd-b05d-20612b91ba8f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 35ab9d5c-c176-40cc-8d9c-ca9a84603d54
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : 57a6cedc-fbec-4652-bc26-4ab89bb5722e
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : a00404dd-1463-419b-9d27-95f1064ea2b8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : b44f875f-fca3-4e3e-a076-b2e1c303c866
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 10a7c1df-80a6-44a2-a23d-a7cfbd6b5b50
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : ce7ce6e0-c2a4-46b8-83b2-b27a5d6b7419
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : c5d66360-2e00-4327-818c-f29890b9602c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 9d74ece1-8fbc-4112-a9ef-1148a4a6e05b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 8b605663-b85f-4df5-8bd4-78f7ea4c85c5
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : a3209ce3-be91-40da-bc0c-7f8e9dd20c58
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : ce06d2e3-58c9-410c-9078-c6e91bb5aa8a
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : ade37f64-afde-4439-a8a1-a0843009aae9
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 5a6b3664-7a51-470f-a0fd-b02fbd2fc8f1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 5243ade5-60f7-4b79-b9d2-b958c2fb2489
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 53ce23e5-8a13-4aca-8501-615796c0f523
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : abc36be6-9f6d-484c-b0af-6a191f1fe787
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="2000000"}
+
+_uuid               : 18165ce8-d32a-4fb6-ab56-c334e6b38c62
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : 9fa42de8-f867-4930-8532-6bb40d21ba96
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 923f0c6a-ce62-413d-9374-a6607c54c178
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 849db26a-078f-44c7-8150-ca2ad3f74180
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : b93d026b-79b4-409b-89dd-fbe1761334da
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : a806dfec-26fd-448b-8f88-61dcc6c4a391
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : 6745756c-b1ae-4297-b80b-2463a57859ce
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 7be0afee-6f3f-4aef-9350-3e0560837dc8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : fdbaf36e-a1e4-4f4b-a69a-c2822a3e942f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : f0177dee-bd9b-438a-801d-19e33a5efd21
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : 79f6ab6e-fa2f-4928-93ca-3817597f726f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 5f41a1ef-3107-4dcb-b2e4-6bc1ccf88752
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000", min-rate="200000"}
+
+_uuid               : fdce8ff1-c387-4dc5-85ba-b7023216b887
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : 47c02871-4b0e-4947-8964-6679917e528d
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 9ede35f3-d7a6-46fe-b1e7-e8f9a801645f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : 1c7a78f4-65f3-4caf-ba5f-65fe80d0210b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : e7a9b1f5-36dd-4aa1-87d6-b7fde67c4c5f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="3000000", min-rate="1000000"}
+
+_uuid               : b7688c78-fdd3-403f-8c58-4e654a128836
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="5000000"}
+
+_uuid               : d4f6f979-9793-45da-be67-29c288065c67
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : e2ef427a-4350-43e0-82ef-aca059ad2989
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : d246c5fb-1f58-4ab9-8f00-1c16cab6ade3
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 58be937c-a028-48fc-b1d2-a4af59aa2d3b
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : 67e3bbfd-b65b-4290-a524-dc24146ab0ba
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="100000000"}
+
+_uuid               : f40053fd-5a93-4e93-b7bf-97153b32789a
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="6000000", min-rate="3000000"}
+
+_uuid               : 2b7e797e-e38c-472c-b80d-362d4b25e524
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}
+
+_uuid               : c22fba7e-206d-4720-b19d-d20ede2d8bd7
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="60000000"}
+
+_uuid               : 4912657f-9d46-481f-8c47-4f794f07d179
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="10000000", min-rate="5000000"}
+
+_uuid               : c1d19f7f-81e0-4d2c-a430-1aafad6f08b9
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="20000000"}

@@ -1,0 +1,5 @@
+RBAC_POLICY = {
+    "admin": "max",
+    "staff": "normal",
+    "guest": "least"
+}
