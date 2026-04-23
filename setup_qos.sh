@@ -1,14 +1,14 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 PORT=${1:-s1-eth4}
 
 echo "[INFO] Setting up QoS on $PORT"
 
-# Xóa QoS cũ nếu có
+# clear existing QoS if present
 ovs-vsctl --if-exists clear Port "$PORT" qos || true
 
-# Tạo QoS + Queue trong 1 transaction
+# Create 4 queues in a single transaction
 ovs-vsctl \
   -- --id=@q0 create Queue other-config:min-rate=5000000 other-config:max-rate=10000000 \
   -- --id=@q1 create Queue other-config:min-rate=3000000 other-config:max-rate=6000000 \

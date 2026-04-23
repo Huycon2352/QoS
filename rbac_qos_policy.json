@@ -1,0 +1,28 @@
+{
+  "queue_ids": [0, 1, 2, 3],
+  "roles": {
+    "admin": { "least_queue_id": 1, "max_queue_id": 0 },
+    "employee": { "least_queue_id": 2, "max_queue_id": 1 },
+    "guest": { "least_queue_id": 3, "max_queue_id": 2 },
+    "server": { "least_queue_id": 2, "max_queue_id": 1 }
+  },
+  "identity": {
+    "by_ip": {
+      "10.0.0.1": "guest",
+      "10.0.0.2": "admin",
+      "10.0.0.3": "employee",
+      "10.0.0.4": "server"
+    },
+    "by_mac": {},
+    "by_port": {}
+  },
+  "congestion": {
+    "window_seconds": 10,
+    "threshold_packets_per_window": 300
+  },
+  "flow": {
+    "priority": 10,
+    "idle_timeout": 20,
+    "hard_timeout": 0
+  }
+}
