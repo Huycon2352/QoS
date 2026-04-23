@@ -119,3 +119,7 @@ Expected baseline:
 - table 0 contains default `goto_table:1`
 - table 1 contains table-miss to controller
 - after ARP/ping starts, table 1 gains learned unicast forwarding flows
+
+Common broken state to watch for:
+
+- only table 0 `goto_table:1` exists while table 1 is empty → packets never reach PacketIn handler for learning/flooding

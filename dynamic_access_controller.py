@@ -33,6 +33,7 @@ class DynamicAccessController(app_manager.RyuApp):
         self.monitor_thread = hub.spawn(self._monitor_loop)
         self.classifier_table = 0
         self.forward_table = 1
+        self._packet_in_seen_dpids = set()
 
         self.logger.info(
             "DynamicAccessController initialized, queues=%s, roles=%s",
@@ -102,10 +103,14 @@ class DynamicAccessController(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         dpid = datapath.id
         in_port = msg.match["in_port"]
-        self.logger.info(
+        table_id = getattr(msg, "table_id", -1)
+        if dpid not in self._packet_in_seen_dpids:
+            self._packet_in_seen_dpids.add(dpid)
+            self.logger.info("[PACKET_IN] handler active for dpid=%s", dpid)
+        self.logger.debug(
             "[PACKET_IN] dpid=%s table=%s in_port=%s buffer_id=%s",
             dpid,
-            getattr(msg, "table_id", "n/a"),
+            table_id,
             in_port,
             msg.buffer_id,
         )
@@ -229,7 +234,9 @@ class DynamicAccessController(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         inst = list(instructions) if instructions is not None else []
         if actions:
-            inst.append(parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions))
+            inst.insert(
+                0, parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)
+            )
 
         if buffer_id is not None:
             mod = parser.OFPFlowMod(
