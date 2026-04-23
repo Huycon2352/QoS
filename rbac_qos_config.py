@@ -6,6 +6,12 @@ from typing import Dict, Optional
 from policy_engine import CongestionConfig, RolePolicy
 
 
+def normalize_mac(value) -> Optional[str]:
+    if value is None:
+        return None
+    return str(value).lower()
+
+
 @dataclass
 class FlowConfig:
     priority: int = 10
@@ -27,8 +33,9 @@ class IdentityConfig:
     ) -> Optional[str]:
         if ip_src and ip_src in self.by_ip:
             return self.by_ip[ip_src]
-        if mac_src and mac_src in self.by_mac:
-            return self.by_mac[mac_src.lower()]
+        mac_key = normalize_mac(mac_src)
+        if mac_key and mac_key in self.by_mac:
+            return self.by_mac[mac_key]
         if in_port is not None and str(in_port) in self.by_port:
             return self.by_port[str(in_port)]
         return None
@@ -55,12 +62,10 @@ class RbacQosConfig:
             for role, item in raw["roles"].items()
         }
         if "guest" not in role_policies:
-            raise ValueError("roles must define a 'guest' fallback role")
+            raise ValueError("configuration must define role 'guest' (fallback role)")
 
         identity = raw.get("identity", {})
-        by_mac = {
-            mac.lower(): role for mac, role in identity.get("by_mac", {}).items()
-        }
+        by_mac = {normalize_mac(mac): role for mac, role in identity.get("by_mac", {}).items()}
         return cls(
             queue_ids=[int(q) for q in raw.get("queue_ids", [0, 1, 2, 3])],
             role_policies=role_policies,

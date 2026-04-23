@@ -3,13 +3,14 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER, set_ev_cls
 from ryu.lib import hub
+from ryu.ofproto import ether
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ipv4, arp
 
 import logging
 
 from policy_engine import PolicyEngine
-from rbac_qos_config import RbacQosConfig, default_config_path
+from rbac_qos_config import RbacQosConfig, default_config_path, normalize_mac
 
 
 class DynamicAccessController(app_manager.RyuApp):
@@ -90,27 +91,26 @@ class DynamicAccessController(app_manager.RyuApp):
         src = eth.src
         dst = eth.dst
 
-        src_host_key = src.lower()
         ip_src = None
         ip_dst = None
 
         ip_pkt = pkt.get_protocol(ipv4.ipv4)
+        is_ipv4 = ip_pkt is not None
         if ip_pkt:
             ip_src = ip_pkt.src
             ip_dst = ip_pkt.dst
-            src_host_key = ip_src
 
         arp_pkt = pkt.get_protocol(arp.arp)
         if arp_pkt:
             ip_src = arp_pkt.src_ip
             ip_dst = arp_pkt.dst_ip
-            src_host_key = ip_src
 
         self.mac_to_port.setdefault(dpid, {})
         self.mac_to_port[dpid][src] = in_port
 
         role = self.config.identity.resolve_role(ip_src, src, in_port)
         if role:
+            src_host_key = self._host_key(ip_src, src)
             host = self.policy.register_or_update_host(
                 src_host_key,
                 role,
@@ -150,11 +150,12 @@ class DynamicAccessController(app_manager.RyuApp):
 
         if out_port != ofproto.OFPP_FLOOD:
             match_fields = {"in_port": in_port, "eth_src": src, "eth_dst": dst}
-            if ip_src:
-                match_fields["eth_type"] = 0x0800
-                match_fields["ipv4_src"] = ip_src
-            if ip_dst:
-                match_fields["ipv4_dst"] = ip_dst
+            if is_ipv4:
+                match_fields["eth_type"] = ether.ETH_TYPE_IP
+                if ip_src:
+                    match_fields["ipv4_src"] = ip_src
+                if ip_dst:
+                    match_fields["ipv4_dst"] = ip_dst
 
             match = parser.OFPMatch(**match_fields)
             self.add_flow(
@@ -214,11 +215,17 @@ class DynamicAccessController(app_manager.RyuApp):
             )
         datapath.send_msg(mod)
 
+    def _host_key(self, ip_src, mac_src):
+        """Use IP as host key when available, otherwise normalized string MAC."""
+        if ip_src:
+            return ip_src
+        return normalize_mac(mac_src) or "unknown-host"
+
     def _delete_host_flows(self, datapath, host):
         parser = datapath.ofproto_parser
         ofproto = datapath.ofproto
         if host.ip:
-            match = parser.OFPMatch(eth_type=0x0800, ipv4_src=host.ip)
+            match = parser.OFPMatch(eth_type=ether.ETH_TYPE_IP, ipv4_src=host.ip)
         elif host.mac:
             match = parser.OFPMatch(eth_src=host.mac)
         else:

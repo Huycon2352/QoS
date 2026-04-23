@@ -21,7 +21,10 @@ Configured in `rbac_qos_policy.json`:
 
 - each role has:
   - `least_queue_id` (degraded queue under congestion)
-  - `max_queue_id` (normal-condition queue)
+  - `max_queue_id` (preferred queue in normal state)
+
+Note: in this lab profile, lower queue IDs are treated as higher service level
+(for example admin uses queue `0` in normal state).
 
 Default role mapping:
 

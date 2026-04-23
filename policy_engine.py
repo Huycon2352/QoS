@@ -38,6 +38,8 @@ class PolicyEngine:
         self.role_policies = role_policies
         self.congestion = congestion
         self.fallback_role = fallback_role
+        if self.fallback_role not in self.role_policies:
+            raise ValueError("fallback_role must exist in role_policies")
         self.window_start = time.time()
         self.window_total_packets = 0
         self.congested = False
@@ -89,11 +91,11 @@ class PolicyEngine:
         return (time.time() - self.window_start) >= self.congestion.window_seconds
 
     def evaluate_and_rotate_window(self) -> Dict[str, int]:
+        """Rotate traffic window and return host_key->queue_id for queue changes."""
         self.last_window_total_packets = self.window_total_packets
         next_congested = (
             self.window_total_packets >= self.congestion.threshold_packets_per_window
         )
-        state_changed = next_congested != self.congested
         self.congested = next_congested
 
         changed_hosts: Dict[str, int] = {}
@@ -106,8 +108,6 @@ class PolicyEngine:
 
         self.window_start = time.time()
         self.window_total_packets = 0
-        if not state_changed:
-            return changed_hosts
         return changed_hosts
 
     def all_hosts(self) -> List[HostState]:
