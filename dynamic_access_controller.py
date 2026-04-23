@@ -31,6 +31,8 @@ class DynamicAccessController(app_manager.RyuApp):
         )
 
         self.monitor_thread = hub.spawn(self._monitor_loop)
+        self.classifier_table = 0
+        self.forward_table = 1
 
         self.logger.info(
             "DynamicAccessController initialized, queues=%s, roles=%s",
@@ -66,9 +68,29 @@ class DynamicAccessController(app_manager.RyuApp):
         self.datapaths[datapath.id] = datapath
         self.mac_to_port.setdefault(datapath.id, {})
 
-        match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
-        self.add_flow(datapath, 0, match, actions)
+        # Table 0: keep classification/QoS hooks and send packets to forwarding table.
+        miss_match = parser.OFPMatch()
+        goto_forward = [parser.OFPInstructionGotoTable(self.forward_table)]
+        self.add_flow(
+            datapath,
+            priority=0,
+            match=miss_match,
+            actions=[],
+            instructions=goto_forward,
+            table_id=self.classifier_table,
+        )
+
+        # Table 1: learning-switch logic receives packet-in on misses.
+        controller_actions = [
+            parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)
+        ]
+        self.add_flow(
+            datapath,
+            priority=0,
+            match=miss_match,
+            actions=controller_actions,
+            table_id=self.forward_table,
+        )
 
         self.logger.info("Switch connected: dpid=%s", datapath.id)
 
@@ -80,9 +102,19 @@ class DynamicAccessController(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         dpid = datapath.id
         in_port = msg.match["in_port"]
+        self.logger.info(
+            "[PACKET_IN] dpid=%s table=%s in_port=%s buffer_id=%s",
+            dpid,
+            getattr(msg, "table_id", "n/a"),
+            in_port,
+            msg.buffer_id,
+        )
 
         pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocols(ethernet.ethernet)[0]
+        eth_list = pkt.get_protocols(ethernet.ethernet)
+        if not eth_list:
+            return
+        eth = eth_list[0]
         eth_type = eth.ethertype
 
         if eth_type == 0x88cc:
@@ -165,6 +197,7 @@ class DynamicAccessController(app_manager.RyuApp):
                 actions,
                 idle_timeout=self.config.flow.idle_timeout,
                 hard_timeout=self.config.flow.hard_timeout,
+                table_id=self.forward_table,
             )
 
         data = None
@@ -189,10 +222,14 @@ class DynamicAccessController(app_manager.RyuApp):
         buffer_id=None,
         idle_timeout=0,
         hard_timeout=0,
+        table_id=0,
+        instructions=None,
     ):
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
+        inst = list(instructions) if instructions is not None else []
+        if actions:
+            inst.append(parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions))
 
         if buffer_id is not None:
             mod = parser.OFPFlowMod(
@@ -203,6 +240,7 @@ class DynamicAccessController(app_manager.RyuApp):
                 instructions=inst,
                 idle_timeout=idle_timeout,
                 hard_timeout=hard_timeout,
+                table_id=table_id,
             )
         else:
             mod = parser.OFPFlowMod(
@@ -212,6 +250,7 @@ class DynamicAccessController(app_manager.RyuApp):
                 instructions=inst,
                 idle_timeout=idle_timeout,
                 hard_timeout=hard_timeout,
+                table_id=table_id,
             )
         datapath.send_msg(mod)
 
@@ -237,6 +276,7 @@ class DynamicAccessController(app_manager.RyuApp):
             out_group=ofproto.OFPG_ANY,
             match=match,
             priority=self.config.flow.priority,
+            table_id=self.forward_table,
         )
         datapath.send_msg(mod)
 

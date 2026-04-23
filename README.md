@@ -104,3 +104,18 @@ In xterm:
 - `h1`: `iperf3 -c 10.0.0.4 -u -b 10M`
 
 Controller logs will show role, selected queue, and state transitions (`normal`/`congested`).
+
+## 6) Forwarding pipeline debug (when ping fails)
+
+Check flow tables:
+
+```bash
+ovs-ofctl -O OpenFlow13 dump-flows s1 table=0
+ovs-ofctl -O OpenFlow13 dump-flows s1 table=1
+```
+
+Expected baseline:
+
+- table 0 contains default `goto_table:1`
+- table 1 contains table-miss to controller
+- after ARP/ping starts, table 1 gains learned unicast forwarding flows
